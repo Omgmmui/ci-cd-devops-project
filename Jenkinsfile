@@ -5,13 +5,15 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t letslearndevops2025/devops-app .'
+                bat 'docker build -t letslearndevops2025/devops-app:latest .'
             }
         }
 
         stage('Docker Login') {
             steps {
-                bat 'docker login -u letslearndevops2025 -p Mohammed@7866'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    bat 'echo %PASSWORD% | docker login -u %USERNAME% --password-stdin'
+                }
             }
         }
 
